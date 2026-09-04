@@ -144,7 +144,7 @@
 <section id="download">
   <div class="wrap">
     <h2>Scarica</h2>
-    <p class="sub">Gratis e open source. Windows 10 e 11 (64-bit).</p>
+    <p class="sub">Gratis e open source. Windows 10 e 11 (64-bit) · Android 10+.</p>
     <div class="dl">
       <div class="card">
         <div class="ic" style="margin:0 auto 14px">🧩</div>
@@ -157,6 +157,13 @@
         <h3>Portable</h3>
         <p style="margin-bottom:16px">Un singolo <code>NetClipboard.exe</code>, nessuna installazione.</p>
         <a id="dl-portable" class="btn btn-ghost" href="https://github.com/Blackslash76/NetClipboard-dist/releases/latest">Scarica il portable</a>
+      </div>
+      <!-- Compare solo quando l'ultima release ha davvero un .apk (vedi lo script in fondo). -->
+      <div class="card" id="card-android" style="display:none">
+        <div class="ic" style="margin:0 auto 14px">🤖</div>
+        <h3>Android</h3>
+        <p style="margin-bottom:16px">APK da installare a mano (origini sconosciute). Telefono e tablet fanno da <b>palco</b> per le finestre teletrasportate dal PC.</p>
+        <a id="dl-android" class="btn btn-ghost" href="https://github.com/Blackslash76/NetClipboard-dist/releases/latest">Scarica l'APK</a>
       </div>
     </div>
     <p class="note">L'app gira nella tray. Se i PC non si vedono, dal menu usa "Configura firewall" (una volta).</p>
@@ -181,14 +188,17 @@
           var v = document.getElementById('ver');
           if (v) v.innerHTML = '<b>' + d.tag_name + '</b>';
         }
-        var setup = null, portable = null;
+        var setup = null, portable = null, apk = null;
         (d.assets || []).forEach(function (a) {
           if (/Setup.*\.exe$/i.test(a.name)) setup = a.browser_download_url;
+          else if (/\.apk$/i.test(a.name)) apk = a.browser_download_url;
           else if (/NetClipboard\.exe$/i.test(a.name)) portable = a.browser_download_url;
         });
         function set(id, url) { var e = document.getElementById(id); if (e && url) e.href = url; }
         if (setup) { set('dl-hero', setup); set('dl-setup', setup); }
         if (portable) set('dl-portable', portable);
+        // La card Android resta nascosta finché una release non porta un APK.
+        if (apk) { set('dl-android', apk); var ca = document.getElementById('card-android'); if (ca) ca.style.display = ''; }
       })
       .catch(function () { /* offline o rate-limit: restano i link alla pagina Releases */ });
   })();
